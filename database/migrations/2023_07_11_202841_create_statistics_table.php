@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('records', function (Blueprint $table) {
+        Schema::create('statistics', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('users');
+            $table->foreignId('user_id')->constrained();
             $table->date('date');
             $table->decimal('body_weight_quantity', 6, 2);
             $table->string('body_weight_unit', 20);
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('records');
+        Schema::dropIfExists('statistics');
     }
 };
