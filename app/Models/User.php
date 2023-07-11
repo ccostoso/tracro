@@ -3,7 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Statistic;
+use App\Models\Log;
+use App\Models\Food;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -44,11 +45,11 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function statistics() {
-        return $this->hasMany(Statistic::class);
+    public function log() {
+        return $this->hasOne(Log::class);
     }
 
-    public function entries() {
-        return $this->belongsToMany(Food::class, 'entries');
+    public function food() {
+        return $this->hasMany(Food::class);
     }
 }
