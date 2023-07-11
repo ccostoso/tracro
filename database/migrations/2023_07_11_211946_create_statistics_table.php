@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('statistics', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->date('date');
+            $table->foreignId('log_id')->constrained();
             $table->decimal('body_weight_quantity', 6, 2);
             $table->string('body_weight_unit', 20);
             $table->decimal('target_protein_multiplier', 3, 2);
             $table->decimal('target_fat_percentage', 5, 2);
             $table->decimal('base_metabolic_rate', 7, 2,);
+            $table->decimal('active_calories_burned', 7, 2,);
             $table->decimal('total_carbs', 7, 2);
             $table->decimal('total_proteins', 7, 2);
             $table->decimal('total_fats', 7, 2);
