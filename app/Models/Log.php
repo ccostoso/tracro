@@ -12,6 +12,11 @@ class Log extends Model
 {
     use HasFactory;
 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public function user() {
         return $this->belongsTo(User::class);
     }
