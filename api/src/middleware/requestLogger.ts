@@ -6,7 +6,7 @@ export const requestLogger = pinoHttp({
     logger,
     genReqId: (req, res) => {
         const header = req.headers['x-request-id'];
-        const id = header ?? randomUUID();
+        const id = (typeof header === 'string' && header.length > 0) ? header : randomUUID();
         res.setHeader('X-Request-Id', id);
         return id;
     },
