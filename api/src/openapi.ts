@@ -1,7 +1,7 @@
 import { OpenApiGeneratorV31 } from '@asteasolutions/zod-to-openapi';
-import { registry } from './schemas/registry';
-import './schemas/common';
-import './schemas/foods';
+import { registry } from './schemas/registry.js';
+import './schemas/common.js';
+import './schemas/foods.js';
 
 const generator = new OpenApiGeneratorV31(registry.definitions);
 export const spec = generator.generateDocument({

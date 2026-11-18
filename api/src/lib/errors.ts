@@ -1,4 +1,4 @@
-import { ErrorSchema, ErrorCodeType } from '../schemas/common';
+import { ErrorSchema, ErrorCodeType } from '../schemas/common.js';
 
 export const errorResponse = (code: ErrorCodeType, description: string) => ({
     description,

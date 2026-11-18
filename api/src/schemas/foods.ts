@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { registry } from './registry';
-import { errorResponse } from "../lib/errors";
+import { registry } from './registry.js';
+import { errorResponse } from "../lib/errors.js";
 
 export const FoodSource = registry.register(
     'FoodSource',
@@ -23,18 +23,16 @@ const FoodSchema = registry.register(
     })
 );
 
-const FoodDetail = FoodSchema.extend({
-    portions: z.array(
-        z.object({
-            label: z.string().min(1).openapi({ description: 'Portion label' }),
-            gramWeight: z.number().min(0).openapi({ description: 'Weight of the portion in grams' })
-        })
-    ).openapi({ description: 'List of portions for the food item' })
-});
-
-registry.register(
+const FoodDetail = registry.register(
     'FoodDetail',
-    FoodDetail
+    FoodSchema.extend({
+        portions: z.array(
+            z.object({
+                label: z.string().min(1).openapi({ description: 'Portion label' }),
+                gramWeight: z.number().min(0).openapi({ description: 'Weight of the portion in grams' })
+            })
+        ).openapi({ description: 'List of portions for the food item' })
+    })
 );
 
 export const FoodSearchQuery = z.object({
@@ -46,10 +44,14 @@ export const FoodSearchQuery = z.object({
 export const FoodSearchResponse = z.object({
     foods: z.array(FoodSchema).openapi({ description: 'List of foods matching the search query' })
 });
+export const FoodLookupParams = z.object({
+    fdcId: z.coerce.number().int().min(1).openapi({ description: 'FDC ID of the food item' })
+});
 
 export type FoodSearchQueryType = z.infer<typeof FoodSearchQuery>;
 export type FoodSearchResponseType = z.infer<typeof FoodSearchResponse>;
-export type FoodDetailType = z.infer<typeof FoodDetail>;
+
+export type FoodLookupParamsType = z.infer<typeof FoodLookupParams>;
 
 registry.registerPath({
     method: 'get',
@@ -84,12 +86,10 @@ registry.registerPath({
 registry.registerPath({
     method: 'get',
     path: '/api/foods/{fdcId}',
-    summary: 'Get food by ID',
+    summary: 'Get food by FDC ID',
     description: 'Retrieve a food item by its FDC ID.',
     request: {
-        params: z.object({
-            fdcId: z.number().int().min(1).openapi({ description: 'FDC ID of the food item' })
-        })
+        params: FoodLookupParams
     },
     responses: {
         200: {
