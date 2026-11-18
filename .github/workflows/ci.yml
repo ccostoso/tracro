@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/setup@v1
+        with:
+          version: 12.21.0
+          runtime: node@26
+          cache: true
+
+      - run: pnpm --filter api typecheck
+      - run: pnpm --filter api test
+      - run: pnpm --filter api build
+    timeout-minutes: 10
