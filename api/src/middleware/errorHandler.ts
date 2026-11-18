@@ -4,11 +4,21 @@ import { ZodError } from 'zod';
 import { AppError } from '../lib/errors.js';
 
 export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+    // If headers are already sent, delegate to the default Express error handler
+    if (res.headersSent) return next(err);
+
     // ZodError from validation
     if (err instanceof ZodError) {
         logger.warn({ err }, 'Validation error');
         return res.status(400).json({
-            error: { code: 'invalid_request', message: 'Invalid request' }
+            error: {
+                code: 'invalid_request',
+                message: 'Invalid request',
+                details: err.issues.map((issue) => ({
+                    path: issue.path.join('.'),
+                    message: issue.message,
+                })),
+            },
         });
     }
 
