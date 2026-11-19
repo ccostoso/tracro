@@ -17,9 +17,9 @@ resource "aws_ecr_lifecycle_policy" "tracro_api" {
         rulePriority = 1
         description  = "Expire images older than the last 10"
         selection = {
-            tagStatus   = "any"
-            countType   = "imageCountMoreThan"
-            countNumber = 10
+          tagStatus   = "any"
+          countType   = "imageCountMoreThan"
+          countNumber = 10
         }
         action = {
           type = "expire"
