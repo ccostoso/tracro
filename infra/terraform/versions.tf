@@ -29,6 +29,8 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
+data "aws_region" "current" {}
+
 output "caller_arn" {
   value = data.aws_caller_identity.current.arn
 }

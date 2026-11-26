@@ -63,3 +63,40 @@ resource "aws_iam_role_policy" "github_actions_ecr" {
 output "github_actions_role_arn" {
   value = aws_iam_role.github_actions.arn
 }
+
+data "aws_iam_policy_document" "ecs_task_trust" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "ecs_task_execution" {
+  name               = "tracro-ecs-execution"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_trust.json
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_managed" {
+  role       = aws_iam_role.ecs_task_execution.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+data "aws_iam_policy_document" "ecs_task_execution_secrets" {
+  statement {
+    sid       = "ReadDatabaseUrlParameter"
+    effect    = "Allow"
+    actions   = ["ssm:GetParameters"]
+    resources = [local.database_url_parameter_arn]
+  }
+}
+
+resource "aws_iam_role_policy" "ecs_task_execution_secrets" {
+  name   = "tracro-ecs-execution-secrets"
+  role   = aws_iam_role.ecs_task_execution.id
+  policy = data.aws_iam_policy_document.ecs_task_execution_secrets.json
+}
