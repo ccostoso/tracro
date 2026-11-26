@@ -91,7 +91,7 @@ data "aws_iam_policy_document" "ecs_task_execution_secrets" {
     sid       = "ReadDatabaseUrlParameter"
     effect    = "Allow"
     actions   = ["ssm:GetParameters"]
-    resources = ["arn:aws:ssm:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:parameter/tracro/DATABASE_URL"]
+    resources = [local.database_url_parameter_arn]
   }
 }
 
